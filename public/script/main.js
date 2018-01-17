@@ -32,8 +32,11 @@ const toggleLoading = state => {
 
     if (state) {
         document.body.classList.add('loading')
+        searchEl.disabled = true
     } else {
         document.body.classList.remove('loading')
+        searchEl.disabled = false
+        searchEl.focus()
     }
 }
 
@@ -120,11 +123,3 @@ document.addEventListener('keyup', event => {
 
 searchEl.addEventListener('keyup', doSearch)
 clearEl.addEventListener('click', clearSearch)
-
-
-
-
-/*
-searchEl.addEventListener('keyup', () => {
-    console.log(searchEl.value)
-})*/
