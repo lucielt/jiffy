@@ -1,5 +1,9 @@
 const API_KEY = 'PNPPXukhULZqolZP2pufKUUu60u2hNyH'
 
+const searchEl = document.querySelector('.search-input')
+const hintEl = document.querySelector('.search-hint')
+const videosEl = document.querySelector('.videos')
+const clearEl = document.querySelector('.search-clear')
 
 const randomChoice = arr => {
     const randIndex = Math.floor(Math.random() * arr.length);
@@ -20,8 +24,24 @@ function createVideo (src) {
 }
 
 
+// on search loading spinner
+// successfull = loading hint to say 'see more'
+// on fail = error
+const toggleLoading = state => {
+    console.log('loading', state)
+
+    if (state) {
+        document.body.classList.add('loading')
+    } else {
+        document.body.classList.remove('loading')
+    }
+}
+
 const searchGiphy = searchTerms => {
     console.log('search for ', searchTerms)
+
+    toggleLoading(true)
+
     fetch(`https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${searchTerms}&limit=50&offset=0&rating=PG-13&lang=fr`)
         .then(response => {
             // Convert to JSON
@@ -36,18 +56,31 @@ const searchGiphy = searchTerms => {
 
             const video = createVideo(src)
 
-            const videosEl = document.querySelector('.videos')
             videosEl.appendChild(video)
+
+            video.addEventListener('loadeddata', event => {
+
+                video.classList.add('visible')
+
+                toggleLoading(false)
+
+                document.body.classList.add('has-results')
+
+                hintEl.innerHTML = `hit enter to search more ${searchTerms}`
+
+            })
+
         })
         .catch(error => {
             //catch something in case fetch fail
-        })
+            console.log('fail')
+            toggleLoading(false)
+            hintEl.innerHTML = `Nothing found for ${searchTerms}`
+            searchEl.value = ""
 
+        })
 }
 
-
-const searchEl = document.querySelector('.search-input')
-const hintEl = document.querySelector('.search-hint')
 // separate keyUp function
 const doSearch = event => {
     searchTerms = searchEl.value
@@ -70,8 +103,23 @@ const doSearch = event => {
     }
 }
 
-searchEl.addEventListener('keyup', doSearch)
+const clearSearch = event => {
+    document.body.classList.remove('has-results')
+    videosEl.innerHTML = ""
+    hintEl.innerHTML = ""
+    searchEl.value = ""
+    // focus the cursor back on input
+    searchEl.focus()
+}
 
+document.addEventListener('keyup', event => {
+    if(event.key === 'Escape'){
+        clearSearch()
+    }
+})
+
+searchEl.addEventListener('keyup', doSearch)
+clearEl.addEventListener('click', clearSearch)
 
 
 

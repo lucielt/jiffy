@@ -38,22 +38,31 @@ input {
 .spinner{
     transition: opacity 0.5s ease;
     opacity: 0;
+}
+.spinner{
     pointer-events: none;
 }
 .search-clear{
     cursor:pointer;
+    position: relative;
+    z-index: 2;
 }
-
+.title{
+    position: relative;
+    z-index: 1;
+}
 .videos,
 .middle,
 .grid {
      display: grid;
      place-items: center;
 }
+
 .video {
     /*/ /*/
     grid-area: 1/1;
     max-width: 500px;
+    max-height: 500px;
     display: block;
 }
 .search-input,
@@ -67,6 +76,17 @@ input {
     transition: opacity 0.5s ease;
 }
 
-.show-hint .search-hint {
+.show-hint .search-hint,
+.loading .spinner {
+    opacity : 1;
+}
+
+.loading .search-hint {
+    opacity : 0;
+}
+.has-results .title{
+    opacity : 0;
+}
+.has-results .search-clear{
     opacity : 1;
 }
