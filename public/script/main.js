@@ -100,9 +100,7 @@ const doSearch = event => {
     console.log(event)
     console.log(searchTerms)
     if(event.key === 'Enter' && searchTerms.length > 2){
-
         searchGiphy(searchTerms)
-
     }
 }
 
